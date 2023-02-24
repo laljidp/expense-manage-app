@@ -25,6 +25,12 @@ function AddContributorModal(props) {
     setName(target.value)
   }
 
+  const closeModal = () => {
+    setName('')
+    setError(false)
+    onClose()
+  }
+
   const handleSubmit = () => {
     if (name.trim().length === 0) {
       setError(true)
@@ -36,11 +42,11 @@ function AddContributorModal(props) {
   return (
     <Modal
       isOpen={open}
-      toggle={onClose}
+      toggle={closeModal}
       className={className}
       backdrop={false}
     >
-      <ModalHeader toggle={onClose} close={closeBtn}>
+      <ModalHeader toggle={closeModal} close={closeBtn}>
         Add contributor
       </ModalHeader>
       <ModalBody>
@@ -57,7 +63,7 @@ function AddContributorModal(props) {
         <Button color="primary" onClick={handleSubmit}>
           Save
         </Button>
-        <Button color="secondary" onClick={onClose}>
+        <Button color="secondary" onClick={closeModal}>
           Cancel
         </Button>
       </ModalFooter>
