@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import ExpensesLists from './components/ExpensesLists'
+import { Button, ButtonGroup } from 'reactstrap'
+import { useState } from 'react'
+import ContributorsLists from './components/ContributorsLists'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const TABS = {
+  contributors: 'Contributors',
+  expenses: 'Expenses',
 }
 
-export default App;
+function App() {
+  const [activeTab, setActiveTab] = useState(TABS.contributors)
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab)
+  }
+
+  return (
+    <div className="App">
+      <ButtonGroup size="sm" className="mt-4">
+        <Button
+          color="primary"
+          outline
+          size="sm"
+          active={activeTab === TABS.contributors}
+          onClick={() => handleTabChange(TABS.contributors)}
+        >
+          {TABS.contributors}
+        </Button>
+        <Button
+          color="primary"
+          outline
+          size="sm"
+          active={activeTab === TABS.expenses}
+          onClick={() => handleTabChange(TABS.expenses)}
+        >
+          {TABS.expenses}
+        </Button>
+      </ButtonGroup>
+      <div className="mt-4">
+        {activeTab === TABS.contributors ? (
+          <ContributorsLists />
+        ) : (
+          <ExpensesLists />
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default App
