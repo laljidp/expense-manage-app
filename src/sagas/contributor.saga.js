@@ -23,9 +23,7 @@ export function* onLoadContributorsStartAsync() {
 
 export function* onAddContributorStartAsync({ payload }) {
   try {
-    console.log('payload=======>', payload)
     const response = yield call(apis.addContributors, payload)
-    console.log('response', response)
     if (!response) {
       yield put(handleContributorError({ message: 'Something went wrong' }))
     } else {

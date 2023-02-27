@@ -11,11 +11,12 @@ const ExpensesSlice = createSlice({
   initialState,
   reducers: {
     loadExpenses: () => {},
+    addExpenseAction: () => {},
     saveExpenses: (state, { payload }) => {
       state.data = payload
     },
     addExpense: (state, { payload }) => {
-      state.data.push({ payload, completed: false })
+      state.data.push(payload)
     },
     deleteExpense: (state, { payload }) => {
       state.data = state.data.filter((exp) => exp.id !== payload)
@@ -28,6 +29,9 @@ const ExpensesSlice = createSlice({
     catchError: (state, { payload }) => {
       state.error = payload
     },
+    setLoading: (state, { payload }) => {
+      state.loading = payload
+    },
   },
 })
 
@@ -38,6 +42,8 @@ export const {
   catchError,
   loadExpenses,
   saveExpenses,
+  setLoading,
+  addExpenseAction,
 } = ExpensesSlice.actions
 
 export default ExpensesSlice.reducer

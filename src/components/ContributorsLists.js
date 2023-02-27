@@ -75,7 +75,7 @@ const ContributorsLists = () => {
               className="mt-2"
             >
               <div className="d-flex justify-content-between">
-                <span>{contributor.name}</span>
+                <span className="fw-bold">{contributor.name}</span>
                 <Button
                   onClick={() => setDeleteID(contributor.id)}
                   color="danger"

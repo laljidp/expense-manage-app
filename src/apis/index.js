@@ -30,9 +30,9 @@ const fetchExpenses = () => {
 const addExpense = (expense) => {
   return new Promise((resolve) => {
     const expenses = getExpensesFromStorage()
-    expense.push(expense)
+    expenses.push(expense)
     localStorage.setItem(EXPENSES, JSON.stringify(expenses))
-    resolve({ message: 'Expense saved!' })
+    resolve({ message: 'Expense saved!', success: true })
   })
 }
 
@@ -40,15 +40,15 @@ const updateExpenses = (id, expense) => {
   return new Promise((resolve, reject) => {
     const expenses = getExpensesFromStorage()
     if (expenses?.length === 0) {
-      reject({ message: 'Record not found!' })
+      reject({ message: 'Record not found!', success: false })
     }
     const ind = expenses.findIndex((e) => e.id === id)
     if (ind === -1) {
-      reject({ message: 'Record not found!' })
+      reject({ message: 'Record not found!', success: false })
     }
     expenses.slice(ind, 1, expense)
     saveExpensesToStorage(expenses)
-    resolve({ message: 'Expense record updated!' })
+    resolve({ message: 'Expense record updated!', success: true })
   })
 }
 
