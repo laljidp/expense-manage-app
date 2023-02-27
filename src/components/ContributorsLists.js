@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, ListGroup, ListGroupItem } from 'reactstrap'
+import { Button, ListGroup, ListGroupItem, Spinner } from 'reactstrap'
 import { generateUUID } from '../apis/apiUtils'
 import {
   loadContributors,
   addContributorAction,
+  deleteContributorAction,
 } from '../slices/contributors.slice'
 import AddContributorModal from './AddContributorModal'
+import DeleteModal from './DeleteModal'
 
 const ContributorsLists = () => {
   const [showContributorModal, setShowContributorModal] = useState(false)
+  const [deleteID, setDeleteID] = useState(null)
   const dispatch = useDispatch()
   const { data, loading } = useSelector((state) => state.contributors)
 
@@ -26,18 +29,38 @@ const ContributorsLists = () => {
     toggleModal()
   }
 
+  const handleDelete = (id) => {
+    // dispatch delete action
+    dispatch(deleteContributorAction(id))
+    setDeleteID(null)
+  }
+
   useEffect(() => {
     dispatch(loadContributors())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (loading) return 'Loading...'
+  if (loading)
+    return (
+      <Spinner
+        color="primary"
+        className="mt-5"
+        style={{
+          height: '3rem',
+          width: '3rem',
+        }}
+      >
+        Loading...
+      </Spinner>
+    )
 
   return (
     <div className="contributor-lists">
       <div className="section">
-        {data.length === 0 && (
+        {!loading && data.length === 0 ? (
           <span className="h6">No contributors found !</span>
+        ) : (
+          ''
         )}
         <div className="mt-1">
           <Button onClick={toggleModal} size="sm" color="success">
@@ -53,7 +76,11 @@ const ContributorsLists = () => {
             >
               <div className="d-flex justify-content-between">
                 <span>{contributor.name}</span>
-                <Button color="danger" size="sm">
+                <Button
+                  onClick={() => setDeleteID(contributor.id)}
+                  color="danger"
+                  size="sm"
+                >
                   X
                 </Button>
               </div>
@@ -65,6 +92,14 @@ const ContributorsLists = () => {
           onClose={toggleModal}
           open={showContributorModal}
         />
+        <DeleteModal
+          onClose={() => setDeleteID(null)}
+          open={!!deleteID}
+          deleteID={deleteID}
+          handleSubmit={handleDelete}
+        >
+          Are you sure you want to delete contributor?
+        </DeleteModal>
       </div>
     </div>
   )

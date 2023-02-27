@@ -12,6 +12,7 @@ const UsersSlice = createSlice({
   reducers: {
     loadContributors: () => {},
     addContributorAction: () => {},
+    deleteContributorAction: () => {},
     saveContributors: (state, { payload }) => {
       state.data = payload
     },
@@ -33,6 +34,9 @@ const UsersSlice = createSlice({
     handleContributorError: (state, { payload }) => {
       state.error = payload
     },
+    setLoading: (state, { payload }) => {
+      state.loading = payload
+    },
   },
 })
 
@@ -45,6 +49,8 @@ export const {
   updateContributor,
   handleContributorError,
   addContributorAction,
+  deleteContributorAction,
+  setLoading,
 } = UsersSlice.actions
 
 export default UsersSlice.reducer

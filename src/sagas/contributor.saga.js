@@ -1,18 +1,21 @@
-import { call, delay, fork, put, takeEvery } from 'redux-saga/effects'
+import { call, fork, put, takeEvery } from 'redux-saga/effects'
 import {
   addContributor,
   saveContributors,
   handleContributorError,
   loadContributors,
   addContributorAction,
+  deleteContributorAction,
+  setLoading,
 } from '../slices/contributors.slice'
 import apis from '../apis'
 
 export function* onLoadContributorsStartAsync() {
   try {
+    yield put(setLoading(true))
     const contributors = yield call(apis.fetchContributors)
-    yield delay(1000)
     yield put(saveContributors(contributors))
+    yield put(setLoading(false))
   } catch (err) {
     yield put(handleContributorError(err))
   }
@@ -33,6 +36,15 @@ export function* onAddContributorStartAsync({ payload }) {
   }
 }
 
+export function* onDeleteContributeStartAsync({ payload }) {
+  try {
+    const { data } = yield call(apis.deleteContributor, payload)
+    yield put(saveContributors(data))
+  } catch (err) {
+    yield put(handleContributorError(err))
+  }
+}
+
 export function* onLoadContributors() {
   yield takeEvery(loadContributors, onLoadContributorsStartAsync)
 }
@@ -41,6 +53,14 @@ export function* onAddContributor() {
   yield takeEvery(addContributorAction, onAddContributorStartAsync)
 }
 
-const contributorSagas = [fork(onLoadContributors), fork(onAddContributor)]
+export function* onDeleteContributor() {
+  yield takeEvery(deleteContributorAction, onDeleteContributeStartAsync)
+}
+
+const contributorSagas = [
+  fork(onLoadContributors),
+  fork(onAddContributor),
+  fork(onDeleteContributor),
+]
 
 export default contributorSagas

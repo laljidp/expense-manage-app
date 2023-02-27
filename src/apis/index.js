@@ -1,4 +1,5 @@
 import {
+  awaitAndCall,
   getContributorsFromStorage,
   getExpensesFromStorage,
   saveContributorsToStorage,
@@ -71,7 +72,7 @@ const fetchContributors = () => {
     if (!contributors) {
       resolve([])
     } else if (Array.isArray(contributors)) {
-      resolve(contributors)
+      awaitAndCall(() => resolve(contributors), 1500)
     } else {
       reject({
         message: 'Something went wrong!',
@@ -105,6 +106,19 @@ const updateContributors = (id, contributor) => {
   })
 }
 
+const deleteContributor = (id) => {
+  return new Promise((resolve, reject) => {
+    let contributors = getContributorsFromStorage()
+    contributors = contributors.filter((c) => c.id !== id)
+    saveContributorsToStorage(contributors)
+    resolve({
+      message: 'Contributor removed',
+      success: true,
+      data: contributors,
+    })
+  })
+}
+
 const deleteAllContributors = () => {
   return new Promise((resolve, reject) => {
     localStorage.setItem(CONTRIBUTORS, '[]')
@@ -125,6 +139,7 @@ const apis = {
   addContributors,
   updateContributors,
   deleteAllContributors,
+  deleteContributor,
 }
 
 export default apis

@@ -17,4 +17,10 @@ export const saveContributorsToStorage = (contributors) => {
   localStorage.setItem(CONTRIBUTORS, JSON.stringify(contributors))
 }
 
+export const awaitAndCall = (fun, timer) => {
+  return setTimeout(() => {
+    fun()
+  }, [timer])
+}
+
 export const generateUUID = () => uuidv4()
